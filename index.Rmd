@@ -1,0 +1,4 @@
+---
+title: "Hello, I'm Piotr Lemancewicz!"
+---
+This website was created to serve as my portfolio where I can show my knowledge of econometrics and different programming languages in a tangible manner.

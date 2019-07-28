@@ -1,0 +1,12 @@
+name: "Piotr Lemancewicz"
+navbar:
+ title: "Piotr Lemancewicz"
+ left:
+  - text: "Home"
+    href: index.html
+  - text: "GARCH models comparison"
+    href: GARCH_practise.html
+output:
+ html_document:
+  theme: cosmo
+  highlight: textmate
