@@ -702,7 +702,7 @@ fit0</code></pre>
 ## 4    50    119.36    8.368e-08
 ## 
 ## 
-## Elapsed time : 0.2074468</code></pre>
+## Elapsed time : 0.2183878</code></pre>
 <p>Nie wszystkie parametry w modelu GARCH (2,2) są istotne. Biorąc pod uwagę odrzucenie hipotezy zerowej w teście Adjusted Pearson Goodness-of-Fit model nie jest dobrze dopasowany do danych.</p>
 <pre class="r"><code>fit1</code></pre>
 <pre><code>## 
@@ -799,7 +799,7 @@ fit0</code></pre>
 ## 4    50     45.52       0.6149
 ## 
 ## 
-## Elapsed time : 0.2074459</code></pre>
+## Elapsed time : 0.213439</code></pre>
 <p>W modelu Garch-t(1,1) suma parametrów alfa i beta jest mniejsza od 1, co wskazuje na stacjonarność wariancji i powracanie do średniej wartości. Wszystkie parametry są dodatnie i istotne statystycznie. Wyniki testu Weighted Ljung-Box na standaryzowanych kwadratach reszt sugerują, aby nie odrzucać hipotezy zerowej o braku autokorelacji. Natomiast wartości p-value testu mnożników Lagrange’a na występowanie efektów ARCH wśród wystandaryzowanych reszt świadczą o tym, że nie można odrzucić hipotezy o niewystępowaniu efektów ARCH. Model Garch-t(1,1) spełnia wytyczne dobrze dopasowanego modelu.</p>
 <p>Poniższy wykres sugeruje występowanie efektu dźwigni w szeregu zwrotów, czyli asymetrycznego wpływu informacji na poziom przyszłej wariancji. Dlatego dalej w analizie rozważone zostaną także asymetryczne modele GARCH z rozkładem t-studenta.</p>
 <p><img src="GARCH_practise_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
@@ -919,7 +919,7 @@ IC</code></pre>
 ## 4    50     41.50       0.7679
 ## 
 ## 
-## Elapsed time : 0.396914</code></pre>
+## Elapsed time : 0.514626</code></pre>
 <p>Wszystkie parametry oprócz “mu” są statystycznie istotne. Nie występuje autokorelacja reszt ani efekty ARCH dla wariancji. Na podstawie uzyskanych oszacowań można wnioskować, że występuje efekt asymetrycznego wpływu informacji, gdyż alfa jest istotna i przyjmuje wartość ujemną, więc wskazuje to na większy wpływ szoków ujemnych. Parametr gamma również jest istotny.</p>
 <p>W celu zbadania czy większa warunkowa zmienność powoduje większy zwrot, czyli czy występuje tzw. “premia za ryzyko” oszacowano model GARCH-in-mean. Współczynnik archm jest statystycznie istotny na poziomie 5%, więc występuje premia za ryzyko.Jednakże na podstawie krytieriów informacyjnych model eGARCH wydaje się być nadal najlepszy.</p>
 <pre class="r"><code>spec.m = ugarchspec(variance.model=list(model=&quot;eGARCH&quot;, garchOrder=c(1,1)), 
