@@ -1,0 +1,183 @@
+<h1 id="mysql-practise---piotr-lemancewicz">MySQL Practise - Piotr Lemancewicz</h1>
+<p><strong>1. Retrieve First name and Last name of all employees.</strong></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">USE</span> sql_hr; </span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="kw">SELECT</span> </span>
+<span id="cb1-3"><a href="#cb1-3"></a>    <span class="fu">concat</span>(first_name,<span class="st">&#39; &#39;</span>,last_name) <span class="kw">AS</span> <span class="st">&#39;Employee name&#39;</span></span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="kw">FROM</span> employees</span>
+<span id="cb1-5"><a href="#cb1-5"></a><span class="kw">ORDER</span> <span class="kw">BY</span> first_name;</span></code></pre></div>
+<p><img src="2019-10-14-13-42-47.png" /></p>
+<p><strong>2. Retrieve id and last name of employees who draw a salary which is at least 70000 and who work in office in Minneapolis. Retrieve also office’s address.</strong></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">USE</span> sql_hr;</span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="kw">SELECT</span> </span>
+<span id="cb2-3"><a href="#cb2-3"></a>    e.employee_id <span class="kw">AS</span> <span class="st">&#39;Employee ID&#39;</span>,</span>
+<span id="cb2-4"><a href="#cb2-4"></a>    e.last_name <span class="kw">AS</span> <span class="st">&#39;Last Name&#39;</span>,</span>
+<span id="cb2-5"><a href="#cb2-5"></a>    o.address <span class="kw">AS</span> <span class="st">&#39;Office address&#39;</span></span>
+<span id="cb2-6"><a href="#cb2-6"></a><span class="kw">FROM</span> employees e </span>
+<span id="cb2-7"><a href="#cb2-7"></a><span class="kw">JOIN</span> offices o</span>
+<span id="cb2-8"><a href="#cb2-8"></a>    <span class="kw">USING</span> (office_id)</span>
+<span id="cb2-9"><a href="#cb2-9"></a>    <span class="kw">WHERE</span> office_id <span class="op">=</span> (</span>
+<span id="cb2-10"><a href="#cb2-10"></a>        <span class="kw">SELECT</span> office_id</span>
+<span id="cb2-11"><a href="#cb2-11"></a>        <span class="kw">FROM</span> offices</span>
+<span id="cb2-12"><a href="#cb2-12"></a>        <span class="kw">WHERE</span> city <span class="op">=</span> <span class="st">&#39;Minneapolis&#39;</span>)</span>
+<span id="cb2-13"><a href="#cb2-13"></a>    <span class="kw">AND</span> salary <span class="op">&gt;=</span> <span class="dv">70000</span>;</span></code></pre></div>
+<p><img src="2019-10-14-13-44-32.png" /></p>
+<p><strong>3. Make aprioriate changes concerning situation: Employee with id 84791 no longer reports to anyone and all employees from office id 4 will from now on report to that employee with id 84791.</strong></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb3-1"><a href="#cb3-1"></a><span class="kw">USE</span> sql_hr;</span>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="kw">UPDATE</span> employees</span>
+<span id="cb3-3"><a href="#cb3-3"></a><span class="kw">SET</span> </span>
+<span id="cb3-4"><a href="#cb3-4"></a>    reports_to <span class="op">=</span> <span class="kw">NULL</span></span>
+<span id="cb3-5"><a href="#cb3-5"></a><span class="kw">WHERE</span> employee_id <span class="op">=</span> <span class="dv">84791</span>;</span>
+<span id="cb3-6"><a href="#cb3-6"></a></span>
+<span id="cb3-7"><a href="#cb3-7"></a><span class="kw">UPDATE</span> employees</span>
+<span id="cb3-8"><a href="#cb3-8"></a><span class="kw">SET</span> </span>
+<span id="cb3-9"><a href="#cb3-9"></a>    reports_to <span class="op">=</span> <span class="dv">84791</span></span>
+<span id="cb3-10"><a href="#cb3-10"></a><span class="kw">WHERE</span> reports_to <span class="kw">IS</span> <span class="kw">NOT</span> <span class="kw">NULL</span> <span class="kw">AND</span> office_id <span class="op">=</span> <span class="dv">4</span>;</span></code></pre></div>
+<p><strong>4. Retrieve the id of the invoice and a year in which it is due.</strong></p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb4-1"><a href="#cb4-1"></a><span class="kw">USE</span> sql_invoicing;</span>
+<span id="cb4-2"><a href="#cb4-2"></a><span class="kw">SELECT</span> </span>
+<span id="cb4-3"><a href="#cb4-3"></a>    invoice_id, </span>
+<span id="cb4-4"><a href="#cb4-4"></a>    <span class="dt">YEAR</span>(due_date)</span>
+<span id="cb4-5"><a href="#cb4-5"></a><span class="kw">FROM</span> invoices;</span></code></pre></div>
+<p><img src="2019-10-14-13-48-27.png" /></p>
+<p><strong>5. Display first name, last name and phone number of customers who live in Atlanta or Nashville and have over 1000 points.</strong></p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb5-1"><a href="#cb5-1"></a><span class="kw">USE</span> sql_store;</span>
+<span id="cb5-2"><a href="#cb5-2"></a><span class="kw">SELECT</span> </span>
+<span id="cb5-3"><a href="#cb5-3"></a>    first_name,</span>
+<span id="cb5-4"><a href="#cb5-4"></a>    last_name,</span>
+<span id="cb5-5"><a href="#cb5-5"></a>    phone,</span>
+<span id="cb5-6"><a href="#cb5-6"></a>    city,</span>
+<span id="cb5-7"><a href="#cb5-7"></a>    points</span>
+<span id="cb5-8"><a href="#cb5-8"></a><span class="kw">FROM</span> customers </span>
+<span id="cb5-9"><a href="#cb5-9"></a><span class="kw">WHERE</span> city <span class="kw">IN</span> (<span class="st">&#39;Atlanta&#39;</span>,<span class="st">&#39;Nashville&#39;</span>) </span>
+<span id="cb5-10"><a href="#cb5-10"></a><span class="kw">AND</span> points <span class="op">&gt;</span> <span class="dv">1000</span>;</span></code></pre></div>
+<p><img src="2019-10-14-13-49-15.png" /></p>
+<p><strong>6. Display first name, last name and phone number of all customers whose phone number starts with 4.</strong></p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb6-1"><a href="#cb6-1"></a><span class="kw">USE</span> sql_store;</span>
+<span id="cb6-2"><a href="#cb6-2"></a><span class="kw">SELECT</span> </span>
+<span id="cb6-3"><a href="#cb6-3"></a>    first_name,</span>
+<span id="cb6-4"><a href="#cb6-4"></a>    last_name,</span>
+<span id="cb6-5"><a href="#cb6-5"></a>    phone    </span>
+<span id="cb6-6"><a href="#cb6-6"></a><span class="kw">FROM</span> customers </span>
+<span id="cb6-7"><a href="#cb6-7"></a><span class="kw">WHERE</span> phone <span class="kw">LIKE</span> <span class="st">&#39;4%&#39;</span>;</span></code></pre></div>
+<p><img src="2019-10-14-13-49-39.png" /></p>
+<p><strong>7. Retrieve first name and last name of customers whose address have word ‘center’ in it.</strong></p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb7-1"><a href="#cb7-1"></a><span class="kw">USE</span> sql_store;</span>
+<span id="cb7-2"><a href="#cb7-2"></a><span class="kw">SELECT</span> </span>
+<span id="cb7-3"><a href="#cb7-3"></a>    first_name,</span>
+<span id="cb7-4"><a href="#cb7-4"></a>    last_name</span>
+<span id="cb7-5"><a href="#cb7-5"></a><span class="kw">FROM</span> customers </span>
+<span id="cb7-6"><a href="#cb7-6"></a><span class="kw">WHERE</span> address <span class="kw">LIKE</span> <span class="st">&#39;%center%&#39;</span>;</span></code></pre></div>
+<p><img src="2019-10-14-13-50-37.png" /></p>
+<p><strong>8. Retrieve the id and birth date of customers who have been born betwen 1986 and 1992.</strong></p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb8-1"><a href="#cb8-1"></a><span class="kw">USE</span> sql_store;</span>
+<span id="cb8-2"><a href="#cb8-2"></a><span class="kw">SELECT</span> </span>
+<span id="cb8-3"><a href="#cb8-3"></a>    customer_id, </span>
+<span id="cb8-4"><a href="#cb8-4"></a>    birth_date</span>
+<span id="cb8-5"><a href="#cb8-5"></a><span class="kw">FROM</span> customers </span>
+<span id="cb8-6"><a href="#cb8-6"></a><span class="kw">WHERE</span> birth_date <span class="kw">BETWEEN</span> <span class="st">&#39;1986-01-01&#39;</span> <span class="kw">AND</span> <span class="st">&#39;1992-01-01&#39;</span>;</span></code></pre></div>
+<p><img src="2019-10-14-13-51-35.png" /></p>
+<p><strong>9. Retrieve the id and birth date of customers who have NOT been born betwen 1986 and 1992 and are NOT from Nashville.</strong></p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb9-1"><a href="#cb9-1"></a><span class="kw">USE</span> sql_store;</span>
+<span id="cb9-2"><a href="#cb9-2"></a><span class="kw">SELECT</span> </span>
+<span id="cb9-3"><a href="#cb9-3"></a>    customer_id, </span>
+<span id="cb9-4"><a href="#cb9-4"></a>    birth_date</span>
+<span id="cb9-5"><a href="#cb9-5"></a><span class="kw">FROM</span> customers </span>
+<span id="cb9-6"><a href="#cb9-6"></a><span class="kw">WHERE</span> birth_date <span class="kw">NOT</span> <span class="kw">BETWEEN</span> <span class="st">&#39;1986-01-01&#39;</span> <span class="kw">AND</span> <span class="st">&#39;1992-01-01&#39;</span></span>
+<span id="cb9-7"><a href="#cb9-7"></a><span class="kw">AND</span> city <span class="op">&lt;&gt;</span> <span class="st">&#39;Nashville&#39;</span>;</span></code></pre></div>
+<p><img src="2019-10-14-13-52-20.png" /></p>
+<p><strong>10. Display id and unit prices of products from order with id = 2, sorted by their unit price in descending mode.</strong></p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb10-1"><a href="#cb10-1"></a><span class="kw">USE</span> sql_store;</span>
+<span id="cb10-2"><a href="#cb10-2"></a><span class="kw">SELECT</span> </span>
+<span id="cb10-3"><a href="#cb10-3"></a>    product_id,</span>
+<span id="cb10-4"><a href="#cb10-4"></a>    unit_price</span>
+<span id="cb10-5"><a href="#cb10-5"></a><span class="kw">FROM</span> order_items</span>
+<span id="cb10-6"><a href="#cb10-6"></a><span class="kw">WHERE</span> order_id <span class="op">=</span> <span class="dv">2</span></span>
+<span id="cb10-7"><a href="#cb10-7"></a><span class="kw">ORDER</span> <span class="kw">BY</span> unit_price <span class="kw">DESC</span>;</span></code></pre></div>
+<p><img src="2019-10-14-13-52-57.png" /></p>
+<p><strong>11. Display the average order value and total order value for each id of all orders.</strong></p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb11-1"><a href="#cb11-1"></a><span class="kw">USE</span> sql_store; </span>
+<span id="cb11-2"><a href="#cb11-2"></a><span class="kw">SELECT</span></span>
+<span id="cb11-3"><a href="#cb11-3"></a>        order_id,</span>
+<span id="cb11-4"><a href="#cb11-4"></a>        <span class="fu">SUM</span>(quantity<span class="op">*</span>unit_price) <span class="kw">AS</span> order_value</span>
+<span id="cb11-5"><a href="#cb11-5"></a>    <span class="kw">FROM</span> order_items</span>
+<span id="cb11-6"><a href="#cb11-6"></a>    <span class="kw">GROUP</span> <span class="kw">BY</span> order_id</span>
+<span id="cb11-7"><a href="#cb11-7"></a>    <span class="kw">ORDER</span> <span class="kw">BY</span> order_value <span class="kw">DESC</span>;</span></code></pre></div>
+<p><img src="2019-10-14-13-54-08.png" /></p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb12-1"><a href="#cb12-1"></a><span class="kw">SELECT</span></span>
+<span id="cb12-2"><a href="#cb12-2"></a><span class="fu">AVG</span> (order_value) <span class="kw">AS</span> <span class="st">&#39;Average Order Value&#39;</span></span>
+<span id="cb12-3"><a href="#cb12-3"></a><span class="kw">FROM</span> (<span class="kw">SELECT</span></span>
+<span id="cb12-4"><a href="#cb12-4"></a>        order_id,</span>
+<span id="cb12-5"><a href="#cb12-5"></a>        <span class="fu">SUM</span>(quantity<span class="op">*</span>unit_price) <span class="kw">AS</span> order_value</span>
+<span id="cb12-6"><a href="#cb12-6"></a>    <span class="kw">FROM</span> order_items</span>
+<span id="cb12-7"><a href="#cb12-7"></a>    <span class="kw">GROUP</span> <span class="kw">BY</span> order_id</span>
+<span id="cb12-8"><a href="#cb12-8"></a>    <span class="kw">ORDER</span> <span class="kw">BY</span> order_value <span class="kw">DESC</span>) <span class="kw">AS</span> X;</span></code></pre></div>
+<p><img src="2019-10-14-13-54-25.png" /></p>
+<p><strong>12. Indicate (in comments) that customers, who have more than 3000 points and ordered something, are Gold customers.</strong></p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb13-1"><a href="#cb13-1"></a><span class="kw">USE</span> sql_store;</span>
+<span id="cb13-2"><a href="#cb13-2"></a><span class="kw">UPDATE</span> orders </span>
+<span id="cb13-3"><a href="#cb13-3"></a><span class="kw">SET</span> comments <span class="op">=</span> <span class="st">&#39;Gold customer&#39;</span></span>
+<span id="cb13-4"><a href="#cb13-4"></a><span class="kw">WHERE</span> customer_id <span class="kw">IN</span></span>
+<span id="cb13-5"><a href="#cb13-5"></a>    (<span class="kw">SELECT</span> customer_id</span>
+<span id="cb13-6"><a href="#cb13-6"></a>    <span class="kw">FROM</span> customers</span>
+<span id="cb13-7"><a href="#cb13-7"></a>    <span class="kw">WHERE</span> points <span class="op">&gt;</span> <span class="dv">3000</span>);</span></code></pre></div>
+<p><strong>13. Display addresses of those departments that has at least 3 employees.</strong></p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb14-1"><a href="#cb14-1"></a><span class="kw">USE</span> sql_hr;</span>
+<span id="cb14-2"><a href="#cb14-2"></a><span class="kw">SELECT</span> </span>
+<span id="cb14-3"><a href="#cb14-3"></a>    e.office_id,</span>
+<span id="cb14-4"><a href="#cb14-4"></a>    o.address <span class="kw">AS</span> <span class="st">&#39;office address&#39;</span>,</span>
+<span id="cb14-5"><a href="#cb14-5"></a>    <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">AS</span> <span class="st">&#39;Number of employees&#39;</span></span>
+<span id="cb14-6"><a href="#cb14-6"></a><span class="kw">FROM</span> employees e</span>
+<span id="cb14-7"><a href="#cb14-7"></a><span class="kw">JOIN</span> offices o </span>
+<span id="cb14-8"><a href="#cb14-8"></a>    <span class="kw">USING</span> (office_id) </span>
+<span id="cb14-9"><a href="#cb14-9"></a><span class="kw">GROUP</span> <span class="kw">BY</span> office_id</span>
+<span id="cb14-10"><a href="#cb14-10"></a><span class="kw">HAVING</span> <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="op">&gt;=</span> <span class="dv">3</span>;</span></code></pre></div>
+<p><img src="2019-10-14-13-56-34.png" /></p>
+<p><strong>14. Display orders before 2019-01-01 as Active and those after 2019-01-01 as Archived orders.</strong></p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb15-1"><a href="#cb15-1"></a><span class="kw">USE</span> sql_store;</span>
+<span id="cb15-2"><a href="#cb15-2"></a><span class="kw">SELECT</span> </span>
+<span id="cb15-3"><a href="#cb15-3"></a>    order_id,</span>
+<span id="cb15-4"><a href="#cb15-4"></a>    order_date,</span>
+<span id="cb15-5"><a href="#cb15-5"></a>    <span class="st">&#39;Active&#39;</span> <span class="kw">AS</span> status</span>
+<span id="cb15-6"><a href="#cb15-6"></a><span class="kw">FROM</span> orders</span>
+<span id="cb15-7"><a href="#cb15-7"></a><span class="kw">WHERE</span> order_date <span class="op">&gt;=</span> <span class="st">&#39;2019-01-01&#39;</span></span>
+<span id="cb15-8"><a href="#cb15-8"></a><span class="kw">UNION</span></span>
+<span id="cb15-9"><a href="#cb15-9"></a><span class="kw">SELECT</span> </span>
+<span id="cb15-10"><a href="#cb15-10"></a>    order_id,</span>
+<span id="cb15-11"><a href="#cb15-11"></a>    order_date,</span>
+<span id="cb15-12"><a href="#cb15-12"></a>    <span class="st">&#39;Archived&#39;</span> <span class="kw">AS</span> status</span>
+<span id="cb15-13"><a href="#cb15-13"></a><span class="kw">FROM</span> orders</span>
+<span id="cb15-14"><a href="#cb15-14"></a><span class="kw">WHERE</span> order_date <span class="op">&lt;</span> <span class="st">&#39;2019-01-01&#39;</span>;</span></code></pre></div>
+<p><img src="2019-10-14-13-59-10.png" /></p>
+<p><strong>15. Display status of orders.</strong></p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb16-1"><a href="#cb16-1"></a><span class="kw">USE</span> sql_store;    </span>
+<span id="cb16-2"><a href="#cb16-2"></a><span class="kw">SELECT</span> </span>
+<span id="cb16-3"><a href="#cb16-3"></a>    o.order_id,</span>
+<span id="cb16-4"><a href="#cb16-4"></a>    o.order_date,</span>
+<span id="cb16-5"><a href="#cb16-5"></a>    c.first_name,</span>
+<span id="cb16-6"><a href="#cb16-6"></a>    c.last_name,</span>
+<span id="cb16-7"><a href="#cb16-7"></a>    os.name <span class="kw">AS</span> status</span>
+<span id="cb16-8"><a href="#cb16-8"></a><span class="kw">FROM</span> orders o</span>
+<span id="cb16-9"><a href="#cb16-9"></a><span class="kw">JOIN</span> customers c </span>
+<span id="cb16-10"><a href="#cb16-10"></a>    <span class="kw">ON</span> o.customer_id <span class="op">=</span> c.customer_id</span>
+<span id="cb16-11"><a href="#cb16-11"></a><span class="kw">JOIN</span> order_statuses os</span>
+<span id="cb16-12"><a href="#cb16-12"></a>    <span class="kw">ON</span> o.status <span class="op">=</span> os.order_status_id</span>
+<span id="cb16-13"><a href="#cb16-13"></a><span class="kw">ORDER</span> <span class="kw">BY</span> order_id;</span></code></pre></div>
+<p><img src="2019-10-14-13-59-38.png" /></p>
+<p><strong>16. Display id and salary of employees whose salary is more than the average salary of all of the employees.</strong></p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb17-1"><a href="#cb17-1"></a><span class="kw">USE</span> sql_hr;</span>
+<span id="cb17-2"><a href="#cb17-2"></a><span class="kw">SELECT</span> </span>
+<span id="cb17-3"><a href="#cb17-3"></a>    employee_id, </span>
+<span id="cb17-4"><a href="#cb17-4"></a>    salary</span>
+<span id="cb17-5"><a href="#cb17-5"></a><span class="kw">FROM</span> employees</span>
+<span id="cb17-6"><a href="#cb17-6"></a><span class="kw">WHERE</span> salary <span class="op">&gt;=</span> (<span class="kw">SELECT</span> <span class="fu">AVG</span>(salary) <span class="kw">FROM</span> employees);</span></code></pre></div>
+<p><img src="2019-10-14-14-00-13.png" /></p>
+<p><strong>17. Find the 2nd lowest salary in the employees table.</strong></p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb18-1"><a href="#cb18-1"></a><span class="kw">USE</span> sql_hr;</span>
+<span id="cb18-2"><a href="#cb18-2"></a><span class="kw">SELECT</span> </span>
+<span id="cb18-3"><a href="#cb18-3"></a>    <span class="fu">min</span>(salary) <span class="kw">AS</span> <span class="st">&#39;2nd lowest salary&#39;</span></span>
+<span id="cb18-4"><a href="#cb18-4"></a><span class="kw">FROM</span> employees </span>
+<span id="cb18-5"><a href="#cb18-5"></a><span class="kw">WHERE</span> salary <span class="kw">NOT</span> <span class="kw">IN</span> ( </span>
+<span id="cb18-6"><a href="#cb18-6"></a>    <span class="kw">SELECT</span> </span>
+<span id="cb18-7"><a href="#cb18-7"></a>        <span class="fu">MIN</span>(salary) </span>
+<span id="cb18-8"><a href="#cb18-8"></a>    <span class="kw">FROM</span> employees);</span></code></pre></div>
+<p><img src="2019-10-14-14-00-34.png" /></p>

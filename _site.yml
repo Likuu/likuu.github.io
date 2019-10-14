@@ -6,6 +6,8 @@ navbar:
     href: index.html
   - text: "GARCH models comparison"
     href: GARCH_practise.html
+  - text: "MySQL practise"
+    href: portfolio_sql.html
 output:
  html_document:
   theme: cosmo
