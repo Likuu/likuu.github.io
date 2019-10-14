@@ -1,183 +1,532 @@
-<h1 id="mysql-practise---piotr-lemancewicz">MySQL Practise - Piotr Lemancewicz</h1>
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>portfolio_sql.utf8.md</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Piotr Lemancewicz</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="GARCH_practise.html">GARCH models comparison</a>
+</li>
+<li>
+  <a href="portfolio_sql.html">MySQL practise</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+
+</div>
+
+
+<div id="mysql-practise---piotr-lemancewicz" class="section level1">
+<h1>MySQL Practise - Piotr Lemancewicz</h1>
 <p><strong>1. Retrieve First name and Last name of all employees.</strong></p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">USE</span> sql_hr; </span>
-<span id="cb1-2"><a href="#cb1-2"></a><span class="kw">SELECT</span> </span>
-<span id="cb1-3"><a href="#cb1-3"></a>    <span class="fu">concat</span>(first_name,<span class="st">&#39; &#39;</span>,last_name) <span class="kw">AS</span> <span class="st">&#39;Employee name&#39;</span></span>
-<span id="cb1-4"><a href="#cb1-4"></a><span class="kw">FROM</span> employees</span>
-<span id="cb1-5"><a href="#cb1-5"></a><span class="kw">ORDER</span> <span class="kw">BY</span> first_name;</span></code></pre></div>
+<pre class="sql"><code>USE sql_hr; 
+SELECT 
+    concat(first_name,&#39; &#39;,last_name) AS &#39;Employee name&#39;
+FROM employees
+ORDER BY first_name;</code></pre>
 <p><img src="2019-10-14-13-42-47.png" /></p>
 <p><strong>2. Retrieve id and last name of employees who draw a salary which is at least 70000 and who work in office in Minneapolis. Retrieve also office’s address.</strong></p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">USE</span> sql_hr;</span>
-<span id="cb2-2"><a href="#cb2-2"></a><span class="kw">SELECT</span> </span>
-<span id="cb2-3"><a href="#cb2-3"></a>    e.employee_id <span class="kw">AS</span> <span class="st">&#39;Employee ID&#39;</span>,</span>
-<span id="cb2-4"><a href="#cb2-4"></a>    e.last_name <span class="kw">AS</span> <span class="st">&#39;Last Name&#39;</span>,</span>
-<span id="cb2-5"><a href="#cb2-5"></a>    o.address <span class="kw">AS</span> <span class="st">&#39;Office address&#39;</span></span>
-<span id="cb2-6"><a href="#cb2-6"></a><span class="kw">FROM</span> employees e </span>
-<span id="cb2-7"><a href="#cb2-7"></a><span class="kw">JOIN</span> offices o</span>
-<span id="cb2-8"><a href="#cb2-8"></a>    <span class="kw">USING</span> (office_id)</span>
-<span id="cb2-9"><a href="#cb2-9"></a>    <span class="kw">WHERE</span> office_id <span class="op">=</span> (</span>
-<span id="cb2-10"><a href="#cb2-10"></a>        <span class="kw">SELECT</span> office_id</span>
-<span id="cb2-11"><a href="#cb2-11"></a>        <span class="kw">FROM</span> offices</span>
-<span id="cb2-12"><a href="#cb2-12"></a>        <span class="kw">WHERE</span> city <span class="op">=</span> <span class="st">&#39;Minneapolis&#39;</span>)</span>
-<span id="cb2-13"><a href="#cb2-13"></a>    <span class="kw">AND</span> salary <span class="op">&gt;=</span> <span class="dv">70000</span>;</span></code></pre></div>
+<pre class="sql"><code>USE sql_hr;
+SELECT 
+    e.employee_id AS &#39;Employee ID&#39;,
+    e.last_name AS &#39;Last Name&#39;,
+    o.address AS &#39;Office address&#39;
+FROM employees e 
+JOIN offices o
+    USING (office_id)
+    WHERE office_id = (
+        SELECT office_id
+        FROM offices
+        WHERE city = &#39;Minneapolis&#39;)
+    AND salary &gt;= 70000;</code></pre>
 <p><img src="2019-10-14-13-44-32.png" /></p>
 <p><strong>3. Make aprioriate changes concerning situation: Employee with id 84791 no longer reports to anyone and all employees from office id 4 will from now on report to that employee with id 84791.</strong></p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb3-1"><a href="#cb3-1"></a><span class="kw">USE</span> sql_hr;</span>
-<span id="cb3-2"><a href="#cb3-2"></a><span class="kw">UPDATE</span> employees</span>
-<span id="cb3-3"><a href="#cb3-3"></a><span class="kw">SET</span> </span>
-<span id="cb3-4"><a href="#cb3-4"></a>    reports_to <span class="op">=</span> <span class="kw">NULL</span></span>
-<span id="cb3-5"><a href="#cb3-5"></a><span class="kw">WHERE</span> employee_id <span class="op">=</span> <span class="dv">84791</span>;</span>
-<span id="cb3-6"><a href="#cb3-6"></a></span>
-<span id="cb3-7"><a href="#cb3-7"></a><span class="kw">UPDATE</span> employees</span>
-<span id="cb3-8"><a href="#cb3-8"></a><span class="kw">SET</span> </span>
-<span id="cb3-9"><a href="#cb3-9"></a>    reports_to <span class="op">=</span> <span class="dv">84791</span></span>
-<span id="cb3-10"><a href="#cb3-10"></a><span class="kw">WHERE</span> reports_to <span class="kw">IS</span> <span class="kw">NOT</span> <span class="kw">NULL</span> <span class="kw">AND</span> office_id <span class="op">=</span> <span class="dv">4</span>;</span></code></pre></div>
+<pre class="sql"><code>USE sql_hr;
+UPDATE employees
+SET 
+    reports_to = NULL
+WHERE employee_id = 84791;
+
+UPDATE employees
+SET 
+    reports_to = 84791
+WHERE reports_to IS NOT NULL AND office_id = 4;</code></pre>
 <p><strong>4. Retrieve the id of the invoice and a year in which it is due.</strong></p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb4-1"><a href="#cb4-1"></a><span class="kw">USE</span> sql_invoicing;</span>
-<span id="cb4-2"><a href="#cb4-2"></a><span class="kw">SELECT</span> </span>
-<span id="cb4-3"><a href="#cb4-3"></a>    invoice_id, </span>
-<span id="cb4-4"><a href="#cb4-4"></a>    <span class="dt">YEAR</span>(due_date)</span>
-<span id="cb4-5"><a href="#cb4-5"></a><span class="kw">FROM</span> invoices;</span></code></pre></div>
+<pre class="sql"><code>USE sql_invoicing;
+SELECT 
+    invoice_id, 
+    YEAR(due_date)
+FROM invoices;</code></pre>
 <p><img src="2019-10-14-13-48-27.png" /></p>
 <p><strong>5. Display first name, last name and phone number of customers who live in Atlanta or Nashville and have over 1000 points.</strong></p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb5-1"><a href="#cb5-1"></a><span class="kw">USE</span> sql_store;</span>
-<span id="cb5-2"><a href="#cb5-2"></a><span class="kw">SELECT</span> </span>
-<span id="cb5-3"><a href="#cb5-3"></a>    first_name,</span>
-<span id="cb5-4"><a href="#cb5-4"></a>    last_name,</span>
-<span id="cb5-5"><a href="#cb5-5"></a>    phone,</span>
-<span id="cb5-6"><a href="#cb5-6"></a>    city,</span>
-<span id="cb5-7"><a href="#cb5-7"></a>    points</span>
-<span id="cb5-8"><a href="#cb5-8"></a><span class="kw">FROM</span> customers </span>
-<span id="cb5-9"><a href="#cb5-9"></a><span class="kw">WHERE</span> city <span class="kw">IN</span> (<span class="st">&#39;Atlanta&#39;</span>,<span class="st">&#39;Nashville&#39;</span>) </span>
-<span id="cb5-10"><a href="#cb5-10"></a><span class="kw">AND</span> points <span class="op">&gt;</span> <span class="dv">1000</span>;</span></code></pre></div>
+<pre class="sql"><code>USE sql_store;
+SELECT 
+    first_name,
+    last_name,
+    phone,
+    city,
+    points
+FROM customers 
+WHERE city IN (&#39;Atlanta&#39;,&#39;Nashville&#39;) 
+AND points &gt; 1000;</code></pre>
 <p><img src="2019-10-14-13-49-15.png" /></p>
 <p><strong>6. Display first name, last name and phone number of all customers whose phone number starts with 4.</strong></p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb6-1"><a href="#cb6-1"></a><span class="kw">USE</span> sql_store;</span>
-<span id="cb6-2"><a href="#cb6-2"></a><span class="kw">SELECT</span> </span>
-<span id="cb6-3"><a href="#cb6-3"></a>    first_name,</span>
-<span id="cb6-4"><a href="#cb6-4"></a>    last_name,</span>
-<span id="cb6-5"><a href="#cb6-5"></a>    phone    </span>
-<span id="cb6-6"><a href="#cb6-6"></a><span class="kw">FROM</span> customers </span>
-<span id="cb6-7"><a href="#cb6-7"></a><span class="kw">WHERE</span> phone <span class="kw">LIKE</span> <span class="st">&#39;4%&#39;</span>;</span></code></pre></div>
+<pre class="sql"><code>USE sql_store;
+SELECT 
+    first_name,
+    last_name,
+    phone    
+FROM customers 
+WHERE phone LIKE &#39;4%&#39;;</code></pre>
 <p><img src="2019-10-14-13-49-39.png" /></p>
 <p><strong>7. Retrieve first name and last name of customers whose address have word ‘center’ in it.</strong></p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb7-1"><a href="#cb7-1"></a><span class="kw">USE</span> sql_store;</span>
-<span id="cb7-2"><a href="#cb7-2"></a><span class="kw">SELECT</span> </span>
-<span id="cb7-3"><a href="#cb7-3"></a>    first_name,</span>
-<span id="cb7-4"><a href="#cb7-4"></a>    last_name</span>
-<span id="cb7-5"><a href="#cb7-5"></a><span class="kw">FROM</span> customers </span>
-<span id="cb7-6"><a href="#cb7-6"></a><span class="kw">WHERE</span> address <span class="kw">LIKE</span> <span class="st">&#39;%center%&#39;</span>;</span></code></pre></div>
+<pre class="sql"><code>USE sql_store;
+SELECT 
+    first_name,
+    last_name
+FROM customers 
+WHERE address LIKE &#39;%center%&#39;;</code></pre>
 <p><img src="2019-10-14-13-50-37.png" /></p>
 <p><strong>8. Retrieve the id and birth date of customers who have been born betwen 1986 and 1992.</strong></p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb8-1"><a href="#cb8-1"></a><span class="kw">USE</span> sql_store;</span>
-<span id="cb8-2"><a href="#cb8-2"></a><span class="kw">SELECT</span> </span>
-<span id="cb8-3"><a href="#cb8-3"></a>    customer_id, </span>
-<span id="cb8-4"><a href="#cb8-4"></a>    birth_date</span>
-<span id="cb8-5"><a href="#cb8-5"></a><span class="kw">FROM</span> customers </span>
-<span id="cb8-6"><a href="#cb8-6"></a><span class="kw">WHERE</span> birth_date <span class="kw">BETWEEN</span> <span class="st">&#39;1986-01-01&#39;</span> <span class="kw">AND</span> <span class="st">&#39;1992-01-01&#39;</span>;</span></code></pre></div>
+<pre class="sql"><code>USE sql_store;
+SELECT 
+    customer_id, 
+    birth_date
+FROM customers 
+WHERE birth_date BETWEEN &#39;1986-01-01&#39; AND &#39;1992-01-01&#39;;</code></pre>
 <p><img src="2019-10-14-13-51-35.png" /></p>
 <p><strong>9. Retrieve the id and birth date of customers who have NOT been born betwen 1986 and 1992 and are NOT from Nashville.</strong></p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb9-1"><a href="#cb9-1"></a><span class="kw">USE</span> sql_store;</span>
-<span id="cb9-2"><a href="#cb9-2"></a><span class="kw">SELECT</span> </span>
-<span id="cb9-3"><a href="#cb9-3"></a>    customer_id, </span>
-<span id="cb9-4"><a href="#cb9-4"></a>    birth_date</span>
-<span id="cb9-5"><a href="#cb9-5"></a><span class="kw">FROM</span> customers </span>
-<span id="cb9-6"><a href="#cb9-6"></a><span class="kw">WHERE</span> birth_date <span class="kw">NOT</span> <span class="kw">BETWEEN</span> <span class="st">&#39;1986-01-01&#39;</span> <span class="kw">AND</span> <span class="st">&#39;1992-01-01&#39;</span></span>
-<span id="cb9-7"><a href="#cb9-7"></a><span class="kw">AND</span> city <span class="op">&lt;&gt;</span> <span class="st">&#39;Nashville&#39;</span>;</span></code></pre></div>
+<pre class="sql"><code>USE sql_store;
+SELECT 
+    customer_id, 
+    birth_date
+FROM customers 
+WHERE birth_date NOT BETWEEN &#39;1986-01-01&#39; AND &#39;1992-01-01&#39;
+AND city &lt;&gt; &#39;Nashville&#39;;</code></pre>
 <p><img src="2019-10-14-13-52-20.png" /></p>
 <p><strong>10. Display id and unit prices of products from order with id = 2, sorted by their unit price in descending mode.</strong></p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb10-1"><a href="#cb10-1"></a><span class="kw">USE</span> sql_store;</span>
-<span id="cb10-2"><a href="#cb10-2"></a><span class="kw">SELECT</span> </span>
-<span id="cb10-3"><a href="#cb10-3"></a>    product_id,</span>
-<span id="cb10-4"><a href="#cb10-4"></a>    unit_price</span>
-<span id="cb10-5"><a href="#cb10-5"></a><span class="kw">FROM</span> order_items</span>
-<span id="cb10-6"><a href="#cb10-6"></a><span class="kw">WHERE</span> order_id <span class="op">=</span> <span class="dv">2</span></span>
-<span id="cb10-7"><a href="#cb10-7"></a><span class="kw">ORDER</span> <span class="kw">BY</span> unit_price <span class="kw">DESC</span>;</span></code></pre></div>
+<pre class="sql"><code>USE sql_store;
+SELECT 
+    product_id,
+    unit_price
+FROM order_items
+WHERE order_id = 2
+ORDER BY unit_price DESC;</code></pre>
 <p><img src="2019-10-14-13-52-57.png" /></p>
 <p><strong>11. Display the average order value and total order value for each id of all orders.</strong></p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb11-1"><a href="#cb11-1"></a><span class="kw">USE</span> sql_store; </span>
-<span id="cb11-2"><a href="#cb11-2"></a><span class="kw">SELECT</span></span>
-<span id="cb11-3"><a href="#cb11-3"></a>        order_id,</span>
-<span id="cb11-4"><a href="#cb11-4"></a>        <span class="fu">SUM</span>(quantity<span class="op">*</span>unit_price) <span class="kw">AS</span> order_value</span>
-<span id="cb11-5"><a href="#cb11-5"></a>    <span class="kw">FROM</span> order_items</span>
-<span id="cb11-6"><a href="#cb11-6"></a>    <span class="kw">GROUP</span> <span class="kw">BY</span> order_id</span>
-<span id="cb11-7"><a href="#cb11-7"></a>    <span class="kw">ORDER</span> <span class="kw">BY</span> order_value <span class="kw">DESC</span>;</span></code></pre></div>
+<pre class="sql"><code>USE sql_store; 
+SELECT
+        order_id,
+        SUM(quantity*unit_price) AS order_value
+    FROM order_items
+    GROUP BY order_id
+    ORDER BY order_value DESC;</code></pre>
 <p><img src="2019-10-14-13-54-08.png" /></p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb12-1"><a href="#cb12-1"></a><span class="kw">SELECT</span></span>
-<span id="cb12-2"><a href="#cb12-2"></a><span class="fu">AVG</span> (order_value) <span class="kw">AS</span> <span class="st">&#39;Average Order Value&#39;</span></span>
-<span id="cb12-3"><a href="#cb12-3"></a><span class="kw">FROM</span> (<span class="kw">SELECT</span></span>
-<span id="cb12-4"><a href="#cb12-4"></a>        order_id,</span>
-<span id="cb12-5"><a href="#cb12-5"></a>        <span class="fu">SUM</span>(quantity<span class="op">*</span>unit_price) <span class="kw">AS</span> order_value</span>
-<span id="cb12-6"><a href="#cb12-6"></a>    <span class="kw">FROM</span> order_items</span>
-<span id="cb12-7"><a href="#cb12-7"></a>    <span class="kw">GROUP</span> <span class="kw">BY</span> order_id</span>
-<span id="cb12-8"><a href="#cb12-8"></a>    <span class="kw">ORDER</span> <span class="kw">BY</span> order_value <span class="kw">DESC</span>) <span class="kw">AS</span> X;</span></code></pre></div>
+<pre class="sql"><code>SELECT
+AVG (order_value) AS &#39;Average Order Value&#39;
+FROM (SELECT
+        order_id,
+        SUM(quantity*unit_price) AS order_value
+    FROM order_items
+    GROUP BY order_id
+    ORDER BY order_value DESC) AS X;</code></pre>
 <p><img src="2019-10-14-13-54-25.png" /></p>
 <p><strong>12. Indicate (in comments) that customers, who have more than 3000 points and ordered something, are Gold customers.</strong></p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb13-1"><a href="#cb13-1"></a><span class="kw">USE</span> sql_store;</span>
-<span id="cb13-2"><a href="#cb13-2"></a><span class="kw">UPDATE</span> orders </span>
-<span id="cb13-3"><a href="#cb13-3"></a><span class="kw">SET</span> comments <span class="op">=</span> <span class="st">&#39;Gold customer&#39;</span></span>
-<span id="cb13-4"><a href="#cb13-4"></a><span class="kw">WHERE</span> customer_id <span class="kw">IN</span></span>
-<span id="cb13-5"><a href="#cb13-5"></a>    (<span class="kw">SELECT</span> customer_id</span>
-<span id="cb13-6"><a href="#cb13-6"></a>    <span class="kw">FROM</span> customers</span>
-<span id="cb13-7"><a href="#cb13-7"></a>    <span class="kw">WHERE</span> points <span class="op">&gt;</span> <span class="dv">3000</span>);</span></code></pre></div>
+<pre class="sql"><code>USE sql_store;
+UPDATE orders 
+SET comments = &#39;Gold customer&#39;
+WHERE customer_id IN
+    (SELECT customer_id
+    FROM customers
+    WHERE points &gt; 3000);</code></pre>
 <p><strong>13. Display addresses of those departments that has at least 3 employees.</strong></p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb14-1"><a href="#cb14-1"></a><span class="kw">USE</span> sql_hr;</span>
-<span id="cb14-2"><a href="#cb14-2"></a><span class="kw">SELECT</span> </span>
-<span id="cb14-3"><a href="#cb14-3"></a>    e.office_id,</span>
-<span id="cb14-4"><a href="#cb14-4"></a>    o.address <span class="kw">AS</span> <span class="st">&#39;office address&#39;</span>,</span>
-<span id="cb14-5"><a href="#cb14-5"></a>    <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">AS</span> <span class="st">&#39;Number of employees&#39;</span></span>
-<span id="cb14-6"><a href="#cb14-6"></a><span class="kw">FROM</span> employees e</span>
-<span id="cb14-7"><a href="#cb14-7"></a><span class="kw">JOIN</span> offices o </span>
-<span id="cb14-8"><a href="#cb14-8"></a>    <span class="kw">USING</span> (office_id) </span>
-<span id="cb14-9"><a href="#cb14-9"></a><span class="kw">GROUP</span> <span class="kw">BY</span> office_id</span>
-<span id="cb14-10"><a href="#cb14-10"></a><span class="kw">HAVING</span> <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="op">&gt;=</span> <span class="dv">3</span>;</span></code></pre></div>
+<pre class="sql"><code>USE sql_hr;
+SELECT 
+    e.office_id,
+    o.address AS &#39;office address&#39;,
+    COUNT(*) AS &#39;Number of employees&#39;
+FROM employees e
+JOIN offices o 
+    USING (office_id) 
+GROUP BY office_id
+HAVING COUNT(*) &gt;= 3;</code></pre>
 <p><img src="2019-10-14-13-56-34.png" /></p>
 <p><strong>14. Display orders before 2019-01-01 as Active and those after 2019-01-01 as Archived orders.</strong></p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb15-1"><a href="#cb15-1"></a><span class="kw">USE</span> sql_store;</span>
-<span id="cb15-2"><a href="#cb15-2"></a><span class="kw">SELECT</span> </span>
-<span id="cb15-3"><a href="#cb15-3"></a>    order_id,</span>
-<span id="cb15-4"><a href="#cb15-4"></a>    order_date,</span>
-<span id="cb15-5"><a href="#cb15-5"></a>    <span class="st">&#39;Active&#39;</span> <span class="kw">AS</span> status</span>
-<span id="cb15-6"><a href="#cb15-6"></a><span class="kw">FROM</span> orders</span>
-<span id="cb15-7"><a href="#cb15-7"></a><span class="kw">WHERE</span> order_date <span class="op">&gt;=</span> <span class="st">&#39;2019-01-01&#39;</span></span>
-<span id="cb15-8"><a href="#cb15-8"></a><span class="kw">UNION</span></span>
-<span id="cb15-9"><a href="#cb15-9"></a><span class="kw">SELECT</span> </span>
-<span id="cb15-10"><a href="#cb15-10"></a>    order_id,</span>
-<span id="cb15-11"><a href="#cb15-11"></a>    order_date,</span>
-<span id="cb15-12"><a href="#cb15-12"></a>    <span class="st">&#39;Archived&#39;</span> <span class="kw">AS</span> status</span>
-<span id="cb15-13"><a href="#cb15-13"></a><span class="kw">FROM</span> orders</span>
-<span id="cb15-14"><a href="#cb15-14"></a><span class="kw">WHERE</span> order_date <span class="op">&lt;</span> <span class="st">&#39;2019-01-01&#39;</span>;</span></code></pre></div>
+<pre class="sql"><code>USE sql_store;
+SELECT 
+    order_id,
+    order_date,
+    &#39;Active&#39; AS status
+FROM orders
+WHERE order_date &gt;= &#39;2019-01-01&#39;
+UNION
+SELECT 
+    order_id,
+    order_date,
+    &#39;Archived&#39; AS status
+FROM orders
+WHERE order_date &lt; &#39;2019-01-01&#39;;</code></pre>
 <p><img src="2019-10-14-13-59-10.png" /></p>
 <p><strong>15. Display status of orders.</strong></p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb16-1"><a href="#cb16-1"></a><span class="kw">USE</span> sql_store;    </span>
-<span id="cb16-2"><a href="#cb16-2"></a><span class="kw">SELECT</span> </span>
-<span id="cb16-3"><a href="#cb16-3"></a>    o.order_id,</span>
-<span id="cb16-4"><a href="#cb16-4"></a>    o.order_date,</span>
-<span id="cb16-5"><a href="#cb16-5"></a>    c.first_name,</span>
-<span id="cb16-6"><a href="#cb16-6"></a>    c.last_name,</span>
-<span id="cb16-7"><a href="#cb16-7"></a>    os.name <span class="kw">AS</span> status</span>
-<span id="cb16-8"><a href="#cb16-8"></a><span class="kw">FROM</span> orders o</span>
-<span id="cb16-9"><a href="#cb16-9"></a><span class="kw">JOIN</span> customers c </span>
-<span id="cb16-10"><a href="#cb16-10"></a>    <span class="kw">ON</span> o.customer_id <span class="op">=</span> c.customer_id</span>
-<span id="cb16-11"><a href="#cb16-11"></a><span class="kw">JOIN</span> order_statuses os</span>
-<span id="cb16-12"><a href="#cb16-12"></a>    <span class="kw">ON</span> o.status <span class="op">=</span> os.order_status_id</span>
-<span id="cb16-13"><a href="#cb16-13"></a><span class="kw">ORDER</span> <span class="kw">BY</span> order_id;</span></code></pre></div>
+<pre class="sql"><code>USE sql_store;    
+SELECT 
+    o.order_id,
+    o.order_date,
+    c.first_name,
+    c.last_name,
+    os.name AS status
+FROM orders o
+JOIN customers c 
+    ON o.customer_id = c.customer_id
+JOIN order_statuses os
+    ON o.status = os.order_status_id
+ORDER BY order_id;</code></pre>
 <p><img src="2019-10-14-13-59-38.png" /></p>
 <p><strong>16. Display id and salary of employees whose salary is more than the average salary of all of the employees.</strong></p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb17-1"><a href="#cb17-1"></a><span class="kw">USE</span> sql_hr;</span>
-<span id="cb17-2"><a href="#cb17-2"></a><span class="kw">SELECT</span> </span>
-<span id="cb17-3"><a href="#cb17-3"></a>    employee_id, </span>
-<span id="cb17-4"><a href="#cb17-4"></a>    salary</span>
-<span id="cb17-5"><a href="#cb17-5"></a><span class="kw">FROM</span> employees</span>
-<span id="cb17-6"><a href="#cb17-6"></a><span class="kw">WHERE</span> salary <span class="op">&gt;=</span> (<span class="kw">SELECT</span> <span class="fu">AVG</span>(salary) <span class="kw">FROM</span> employees);</span></code></pre></div>
+<pre class="sql"><code>USE sql_hr;
+SELECT 
+    employee_id, 
+    salary
+FROM employees
+WHERE salary &gt;= (SELECT AVG(salary) FROM employees);</code></pre>
 <p><img src="2019-10-14-14-00-13.png" /></p>
 <p><strong>17. Find the 2nd lowest salary in the employees table.</strong></p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb18-1"><a href="#cb18-1"></a><span class="kw">USE</span> sql_hr;</span>
-<span id="cb18-2"><a href="#cb18-2"></a><span class="kw">SELECT</span> </span>
-<span id="cb18-3"><a href="#cb18-3"></a>    <span class="fu">min</span>(salary) <span class="kw">AS</span> <span class="st">&#39;2nd lowest salary&#39;</span></span>
-<span id="cb18-4"><a href="#cb18-4"></a><span class="kw">FROM</span> employees </span>
-<span id="cb18-5"><a href="#cb18-5"></a><span class="kw">WHERE</span> salary <span class="kw">NOT</span> <span class="kw">IN</span> ( </span>
-<span id="cb18-6"><a href="#cb18-6"></a>    <span class="kw">SELECT</span> </span>
-<span id="cb18-7"><a href="#cb18-7"></a>        <span class="fu">MIN</span>(salary) </span>
-<span id="cb18-8"><a href="#cb18-8"></a>    <span class="kw">FROM</span> employees);</span></code></pre></div>
+<pre class="sql"><code>USE sql_hr;
+SELECT 
+    min(salary) AS &#39;2nd lowest salary&#39;
+FROM employees 
+WHERE salary NOT IN ( 
+    SELECT 
+        MIN(salary) 
+    FROM employees);</code></pre>
 <p><img src="2019-10-14-14-00-34.png" /></p>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
